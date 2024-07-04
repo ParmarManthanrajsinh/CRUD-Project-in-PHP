@@ -21,17 +21,16 @@ include "connection.php";
     <?php 
     include "navbar_home.php"; 
     include "alert.php";
+    include "insert.php";
     ?>
     
 
     <div class="container">
         <br><br><br>
 
-        <button class="btn btn-primary">
+        <!-- <button class="btn btn-primary">
             <a href="insert.php" style="color: white; text-decoration: none;">Add Notes</a>
-        </button>
-
-        <br><br><br>
+        </button> -->
 
         <?php include "table.php" ?>
     </div>

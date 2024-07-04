@@ -14,9 +14,6 @@
                 <a class="nav-link " href="/CRUD/main.php">Home</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="/CRUD/insert.php">AddNotes</a>
-            </li>
-            <li class="nav-item active">
                 <a class="nav-link active" href="/CRUD/main.php">EditNotes</a>
             </li>
         </ul>

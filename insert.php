@@ -23,19 +23,17 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    <?php include "navbar_AddNotes.php"; ?>
-
     <br><br>
 
     <div class="container border">
         <form action="/CRUD/main.php" method="post">
             <div class="mb-3">
                 <label for="InputTitle" class="form-label">Title</label>
-                <input type="text" class="form-control" id="InputTitle" aria-describedby="TitleHelp" name="title">
+                <input type="text" class="form-control" id="InputTitle" placeholder="title" aria-describedby="TitleHelp" name="title">
             </div>
             <div class="mb-3">
                 <label for="InputDescription" class="form-label">Description</label>
-                <textarea class="form-control" id="FormDescription" rows="3" name="description"></textarea>
+                <textarea class="form-control" id="FormDescription" placeholder="description" rows="3" name="description"></textarea>
             </div>
             <button type="submit" class="btn btn-primary" name="insertbutton">Add</button>
         </form>
