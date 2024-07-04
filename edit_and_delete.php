@@ -30,9 +30,24 @@
 
             <?php
             $id = $_POST['id'];
-            $title = $_POST['title'];
-            $description = $_POST['description'];
+            $title = "";
+            $description = "";
             $nodelete = $_POST['nodelete'];
+            $updatedata = "";
+
+            $conn = new mysqli("localhost", "root", "", "notes");
+            $sql = "SELECT * FROM `notes` ";
+            $result = mysqli_query($conn, $sql);
+
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    if ($row['id'] == $id) {
+                        $title = $row['title'];
+                        $description = $row['description'];
+                        $updatedata = $row['updatedata'];
+                    }
+                }
+            }
 
             print "<input type='hidden' name='id' value=" . $id . ">";
             ?>
@@ -60,6 +75,13 @@
             </div>
             <div class="mb-3">
                 <button class='btn btn-primary' name='deletebutton'>Delete</button>
+            </div><br><br>
+            <div class="mb-3">
+                <label>Resent Changes in the Notes</label><br><br>
+                <?php
+                print "$updatedata";
+                print "<textarea class='form-control' style='display:none;' id='FormDescription' rows='3' name='updatedata'>$updatedata</textarea>";
+                ?>
             </div>
         </form>
     </div>

@@ -21,10 +21,8 @@
                 if ($row['deletedatetime'] == NULL) {
                     print "<tr> <form action='/CRUD/edit_and_delete.php' method='post'>
                     <input type='hidden' name='id' value=" . $row['id'] . ">
-                    <input type='hidden' name='title' value=" . $row['title'] . ">
-                    <input type='hidden' name='description' value=" . $row['description'] . ">
                     <input type='hidden' name='nodelete' value=" . $row['nodelete'] . ">
-                    <th scope=\"row\"> " . $no . "</th>
+                    <th scope='row'> " . $no . "</th>
                     <td> " . $row["title"] . "</td>
                     <td>" . $row["description"] . "</td>
                     <td>" . $row["datetime"] . "</td>

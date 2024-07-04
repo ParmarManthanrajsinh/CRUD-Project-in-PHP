@@ -53,18 +53,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = $_POST['id'];
             $title = $_POST['title'];
             $description = $_POST['description'];
+            $updatedata = $_POST['updatedata'];
+
 
             if ($title == "" && $description == "") {
                 $error = true;
                 // print "Fill the all the detailes";
 
             } else {
-                $stmt = $conn->prepare("UPDATE `notes` SET `title` = ?, `description` = ? WHERE `id` = ?");
+                $sql = "SELECT * FROM `notes` ";
+                $result = mysqli_query($conn, $sql);
+
+                if ($result) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        if ($row['id'] == $id) {
+                            $oldtitle = $row['title'];
+                            $olddescription = $row['description'];
+
+                            $updatedata .= "Title: " . $oldtitle . " => " . $title . "<br>";
+                            $updatedata .= "Description: " . $olddescription . " => " . $description . "<br><br>";
+                        }
+                    }
+                }
+
+                $stmt = $conn->prepare("UPDATE `notes` SET `title` = ?, `description` = ?, `updatedata` = ? WHERE `notes`.`id` = ?;");
                 if ($stmt === false) {
                     die('Prepare failed: ' . htmlspecialchars($conn->error));
                 }
 
-                $stmt->bind_param("ssi", $title, $description, $id);
+                $stmt->bind_param("sssi", $title, $description, $updatedata, $id);
                 $result = $stmt->execute();
 
 
