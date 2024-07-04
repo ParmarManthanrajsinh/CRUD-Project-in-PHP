@@ -23,6 +23,7 @@
                     <input type='hidden' name='id' value=" . $row['id'] . ">
                     <input type='hidden' name='title' value=" . $row['title'] . ">
                     <input type='hidden' name='description' value=" . $row['description'] . ">
+                    <input type='hidden' name='nodelete' value=" . $row['nodelete'] . ">
                     <th scope=\"row\"> " . $no . "</th>
                     <td> " . $row["title"] . "</td>
                     <td>" . $row["description"] . "</td>

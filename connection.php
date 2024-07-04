@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['deletebutton'])) {
 
         $id = $_POST['id'];
+        $nodelete = 0;
 
         $sql = "UPDATE `notes` SET `deletedatetime` = NOW() WHERE `notes`.`id` = $id;";
         $result = mysqli_query($conn, $sql);
@@ -89,6 +90,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $delete = true;
             // print "deleted";
         } else {
+            echo "Error: " . htmlspecialchars($conn->error);
+        }
+
+        $sql = "SELECT * FROM `notes` ";
+        $result = mysqli_query($conn, $sql);
+
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                if ($row['id'] == $id) {
+                    $nodelete = $row['nodelete'] + 1;
+                }
+            }
+        }
+
+        $sql = "UPDATE `notes` SET `nodelete` = $nodelete WHERE `notes`.`id` = $id;";
+        $result = mysqli_query($conn, $sql);
+
+        if (!$result) {
             echo "Error: " . htmlspecialchars($conn->error);
         }
     }

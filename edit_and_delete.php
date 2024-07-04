@@ -30,8 +30,9 @@
 
             <?php
             $id = $_POST['id'];
-            $title = $_POST['title']; 
+            $title = $_POST['title'];
             $description = $_POST['description'];
+            $nodelete = $_POST['nodelete'];
 
             print "<input type='hidden' name='id' value=" . $id . ">";
             ?>
@@ -47,7 +48,12 @@
                 <?php
                 print "<textarea class='form-control' id='FormDescription' rows='3' name='description'>$description</textarea>";
                 ?>
-                
+
+            </div>
+            <div class="mb-3">
+                <?php
+                print "<label for='No_of_Delete' class='form-label'>No of deletes $nodelete</label>";
+                ?>
             </div>
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary" name="editbutton">Update</button>
