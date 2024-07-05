@@ -1,4 +1,4 @@
-<table class="table table-bordered ">
+<table class="table table-bordered">
     <thead>
         <tr class="table-primary">
             <th scope="col">No</th>
@@ -8,7 +8,7 @@
             <th scope="col">Action</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="table-group-divider">
 
 
         <?php
@@ -29,7 +29,7 @@
                     <td>" . "<button class='btn btn-sm btn-primary' name='editbutton'>Edit</button>" . "</td>
                     </form></tr>";
                 } else {
-                    print "<tr> <form action='/CRUD/main.php' method='post'>
+                    print "<tr class='table-danger'> <form action='/CRUD/main.php' method='post'>
                     <input type='hidden' name='id' value=" . $row['id'] . ">
                     <th scope=\"row\"> " . $no . "</th>
                     <td><del> " . $row["title"] . "</del></td>

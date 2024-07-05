@@ -4,6 +4,7 @@ $error = false;
 $update = false;
 $insert = false;
 $restore = false;
+$history = false;
 $delete = false;
 
 $servername = "localhost";
@@ -53,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $id = $_POST['id'];
             $title = $_POST['title'];
             $description = $_POST['description'];
-            $updatedata = $_POST['updatedata'];
 
 
             if ($title == "" && $description == "") {
@@ -70,18 +70,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             $oldtitle = $row['title'];
                             $olddescription = $row['description'];
 
-                            $updatedata .= "Title: " . $oldtitle . " => " . $title . "<br>";
-                            $updatedata .= "Description: " . $olddescription . " => " . $description . "<br><br>";
+                            if (($oldtitle != $title) || ($olddescription != $description)) {
+
+                                $sql2 = "INSERT INTO `history` (`pre_id`, `title`, `description`) VALUES (?, ?, ?)";
+                                $stmt = $conn->prepare($sql2);
+                                $stmt->bind_param("sss", $id, $oldtitle, $olddescription);
+                                $history_add = $stmt->execute();
+                                if (!$history_add) {
+                                    echo "Error: " . $stmt->error;
+                                }
+                                $stmt->close();
+                            }
                         }
                     }
                 }
 
-                $stmt = $conn->prepare("UPDATE `notes` SET `title` = ?, `description` = ?, `updatedata` = ? WHERE `notes`.`id` = ?;");
+                $stmt = $conn->prepare("UPDATE `notes` SET `title` = ?, `description` = ? WHERE `notes`.`id` = ?;");
                 if ($stmt === false) {
                     die('Prepare failed: ' . htmlspecialchars($conn->error));
                 }
 
-                $stmt->bind_param("sssi", $title, $description, $updatedata, $id);
+                $stmt->bind_param("ssi", $title, $description, $id);
                 $result = $stmt->execute();
 
 
@@ -148,10 +157,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $sql = "DELETE FROM `notes` WHERE `notes`.`id` = $id";
         $result = mysqli_query($conn, $sql);
+        if (!$result) {
+            echo "Error: " . htmlspecialchars($conn->error);
+        }
+
+        $sql = "SELECT * FROM `history`";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                if ($row['pre_id'] == $id) {
+                    $hid = $row['id'];
+                    $sql2 = "DELETE FROM `history` WHERE `history`.`id` = '$hid'";
+                    $result2 = mysqli_query($conn, $sql2);
+                    if (!$result2) {
+                        echo "Error: " . htmlspecialchars($conn->error);
+                    }
+                }
+            }
+        }
+
 
         if ($result) {
             $delete = true;
             // print "Notes Deleted permanently";
+        } else {
+            echo "Error: " . htmlspecialchars($conn->error);
+        }
+    }
+    if (isset($_POST["historydelete"])) {
+
+        $hid = $_POST["id"];
+        $sql = "DELETE FROM `history` WHERE `history`.`id` = '$hid'";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $history = true;
+            // print "Notes history Deleted permanently";
         } else {
             echo "Error: " . htmlspecialchars($conn->error);
         }

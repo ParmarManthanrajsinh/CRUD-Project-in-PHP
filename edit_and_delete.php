@@ -7,13 +7,7 @@
     <title>Insert Notes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-        .border {
-            border: 1px solid rgb(140, 140, 140);
-            border-radius: 15px;
-            padding: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="border.css">
 </head>
 
 <body>
@@ -30,10 +24,10 @@
 
             <?php
             $id = $_POST['id'];
+            // $hid = array();
             $title = "";
             $description = "";
             $nodelete = $_POST['nodelete'];
-            $updatedata = "";
 
             $conn = new mysqli("localhost", "root", "", "notes");
             $sql = "SELECT * FROM `notes` ";
@@ -44,12 +38,23 @@
                     if ($row['id'] == $id) {
                         $title = $row['title'];
                         $description = $row['description'];
-                        $updatedata = $row['updatedata'];
                     }
                 }
             }
 
+            // $sql = "SELECT * FROM `history`";
+            // $result = mysqli_query($conn, $sql);
+            // if ($result) {
+            //     while ($row = mysqli_fetch_assoc($result)) {
+            //         if ($row['pre_id'] == $id) {
+            //             array_push($hid, $row['id']);
+            //         }
+            //     }
+            // }
+            // print_r($hid);
+            
             print "<input type='hidden' name='id' value=" . $id . ">";
+            print "<input type='hidden' name='nodelete' value=" . $nodelete . ">";
             ?>
 
             <div class="mb-3">
@@ -75,15 +80,61 @@
             </div>
             <div class="mb-3">
                 <button class='btn btn-primary' name='deletebutton'>Delete</button>
-            </div><br><br>
-            <div class="mb-3">
-                <label>Resent Changes in the Notes</label><br><br>
-                <?php
-                print "$updatedata";
-                print "<textarea class='form-control' style='display:none;' id='FormDescription' rows='3' name='updatedata'>$updatedata</textarea>";
-                ?>
-            </div>
+            </div><br>
+
+
         </form>
+    </div>
+
+    <br>
+    <!-- History table -->
+    <div class="container border">
+        <div class="mb-3">
+            <label>Resent Changes in the Notes</label><br><br>
+        </div>
+
+        <table class="table table-bordered ">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">No</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date/Time</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <?php
+
+            $conn = mysqli_connect("localhost", "root", "", "notes");
+            if (mysqli_connect_errno()) {
+                die("Connection fall " . mysqli_connect_error());
+            }
+
+            $sql = "SELECT * FROM `history`";
+            $result = mysqli_query($conn, $sql);
+            $no = 1;
+
+            if ($result) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    if ($row["pre_id"] == $id) {
+                        print "<tr> <form action='/CRUD/main.php' method='post'>
+                                <input type='hidden' name='id' value=" . $row['id'] . ">
+                                <th scope='row'> " . $no . "</th>
+                                <td> " . $row["title"] . "</td>
+                                <td>" . $row["description"] . "</td>
+                                <td>" . $row["datetime"] . "</td>
+                                <td>" . "<button class='btn btn-sm btn-primary' name='historydelete'>Delete</button>" . "</td>
+                                </form></tr>";
+                        $no++;
+                    }
+                }
+            }
+
+            ?>
+            </tbody>
+        </table>
+
     </div>
 
 

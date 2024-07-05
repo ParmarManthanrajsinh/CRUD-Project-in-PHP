@@ -1,0 +1,36 @@
+/* General border styling with smooth transition effects */
+.border {
+    border: 2px solid #8C8C8C;
+    /* Darker border for better contrast */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+    transition: all 0.3s ease-in-out;
+    /* Smooth transition effects */
+    background-color: #f9f9f9;
+    /* Light background color for contrast */
+}
+
+/* Hover effect for interactive feedback */
+.border:hover {
+    border-color: #555;
+    /* Darker border on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Enhanced shadow on hover */
+    background-color: #fff;
+    /* Change background color on hover */
+}
+
+/* Responsive padding for better usability on different screen sizes */
+@media (max-width: 768px) {
+    .border {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .border {
+        padding: 10px;
+    }
+}
