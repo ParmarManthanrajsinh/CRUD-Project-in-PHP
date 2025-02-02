@@ -61,28 +61,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // print "Fill the all the detailes";
 
             } else {
-                $sql = "SELECT * FROM `notes` ";
+                $sql = "SELECT * FROM `notes` WHERE `id` = $id";
                 $result = mysqli_query($conn, $sql);
 
                 if ($result) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        if ($row['id'] == $id) {
-                            $oldtitle = $row['title'];
-                            $olddescription = $row['description'];
+                    $row = mysqli_fetch_assoc($result);
+                    if ($row['id'] == $id) {
+                        $oldtitle = $row['title'];
+                        $olddescription = $row['description'];
 
-                            if (($oldtitle != $title) || ($olddescription != $description)) {
+                        if (($oldtitle != $title) || ($olddescription != $description)) {
 
-                                $sql2 = "INSERT INTO `history` (`pre_id`, `title`, `description`) VALUES (?, ?, ?)";
-                                $stmt = $conn->prepare($sql2);
-                                $stmt->bind_param("sss", $id, $oldtitle, $olddescription);
-                                $history_add = $stmt->execute();
-                                if (!$history_add) {
-                                    echo "Error: " . $stmt->error;
-                                }
-                                $stmt->close();
+                            $sql2 = "INSERT INTO `history` (`pre_id`, `title`, `description`) VALUES (?, ?, ?)";
+                            $stmt = $conn->prepare($sql2);
+                            $stmt->bind_param("sss", $id, $oldtitle, $olddescription);
+                            $history_add = $stmt->execute();
+                            if (!$history_add) {
+                                echo "Error: " . $stmt->error;
                             }
+                            $stmt->close();
                         }
                     }
+
                 }
 
                 $stmt = $conn->prepare("UPDATE `notes` SET `title` = ?, `description` = ? WHERE `notes`.`id` = ?;");
@@ -119,14 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Error: " . htmlspecialchars($conn->error);
         }
 
-        $sql = "SELECT * FROM `notes` ";
+        $sql = "SELECT * FROM `notes` WHERE `id`= $id ";
         $result = mysqli_query($conn, $sql);
 
         if ($result) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                if ($row['id'] == $id) {
-                    $nodelete = $row['nodelete'] + 1;
-                }
+            $row = mysqli_fetch_assoc($result);
+            if ($row['id'] == $id) {
+                $nodelete = $row['nodelete'] + 1;
             }
         }
 
@@ -161,17 +160,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Error: " . htmlspecialchars($conn->error);
         }
 
-        $sql = "SELECT * FROM `history`";
+        $sql = "SELECT * FROM `history` WHERE `history`.`pre_id` = $id";
         $result = mysqli_query($conn, $sql);
         if ($result) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                if ($row['pre_id'] == $id) {
-                    $hid = $row['id'];
-                    $sql2 = "DELETE FROM `history` WHERE `history`.`id` = '$hid'";
-                    $result2 = mysqli_query($conn, $sql2);
-                    if (!$result2) {
-                        echo "Error: " . htmlspecialchars($conn->error);
-                    }
+            $row = mysqli_fetch_assoc($result);
+            if ($row['pre_id'] == $id) {
+                $hid = $row['id'];
+                $sql2 = "DELETE FROM `history` WHERE `history`.`id` = '$hid'";
+                $result2 = mysqli_query($conn, $sql2);
+                if (!$result2) {
+                    echo "Error: " . htmlspecialchars($conn->error);
                 }
             }
         }

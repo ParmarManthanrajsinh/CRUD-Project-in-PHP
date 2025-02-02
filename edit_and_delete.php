@@ -30,15 +30,14 @@
             $nodelete = $_POST['nodelete'];
 
             $conn = new mysqli("localhost", "root", "", "notes");
-            $sql = "SELECT * FROM `notes` ";
+            $sql = "SELECT * FROM `notes` WHERE `id` = $id";
             $result = mysqli_query($conn, $sql);
 
             if ($result) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    if ($row['id'] == $id) {
-                        $title = $row['title'];
-                        $description = $row['description'];
-                    }
+                $row = mysqli_fetch_assoc($result);
+                if ($row['id'] == $id) {
+                    $title = $row['title'];
+                    $description = $row['description'];
                 }
             }
 
